@@ -6,11 +6,70 @@ service: quiztopia-serverless-api
 provider:
   name: aws
   runtime: nodejs18.x
+  region: eu-north-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:Scan
+        - dynamodb:Query
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource:
+        - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Quiz
+        - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Users
+        - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Leaderboard
+
 
 functions:
-  hello:
-    handler: handler.hello
+  addQuestionToQuiz:
+    handler: functions/addQuestionToQuiz/index.handler
     events:
       - httpApi:
           path: /
-          method: get
+          method: post
+
+  createAccount:
+    handler: functions/createAccount/index.handler
+    events: 
+      - httpApi:
+          path: /
+          method: post
+
+  createQuiz:
+    handler: functions/createQuiz/index.handler
+    events:
+      - httpApi:
+          path: /
+          method: post
+
+  deleteQuiz:
+    handler: functions/deleteQuiz/index.handler
+    events:
+      - httpApi:
+          path: /
+          method: delete
+
+  getAllQuiz:
+    handler: functions/getAllQuiz/index.handler
+    events:
+      - httpApi:
+        path: /
+        method: get
+
+  getQuizById:
+    handler: functions/getQuizById/index.handler
+    events:
+      - httpApi:
+        path: /
+        method: get
+
+  loginAccount:
+    handler: functions/loginAccount/index.handler
+    events:
+      - httpApi:
+        path: /
+        method: get
+  
