@@ -22,7 +22,6 @@ provider:
         - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Users
         - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Leaderboard
 
-
 functions:
   addQuestionToQuiz:
     handler: functions/addQuestionToQuiz/index.handler
@@ -33,7 +32,7 @@ functions:
 
   createAccount:
     handler: functions/createAccount/index.handler
-    events: 
+    events:
       - httpApi:
           path: /
           method: post
@@ -72,4 +71,3 @@ functions:
       - httpApi:
         path: /
         method: get
-  
