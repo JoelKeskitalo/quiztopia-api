@@ -48,7 +48,7 @@ functions:
     handler: functions/deleteQuiz/index.handler
     events:
       - httpApi:
-          path: /quiz/{quizId}
+          path: /quiz/{userId}/{quizId}
           method: delete
 
   getAllQuiz:
