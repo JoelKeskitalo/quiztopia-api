@@ -55,19 +55,19 @@ functions:
     handler: functions/getAllQuiz/index.handler
     events:
       - httpApi:
-        path: /quiz
-        method: get
+          path: /quiz
+          method: get
 
   getQuizById:
     handler: functions/getQuizById/index.handler
     events:
       - httpApi:
-        path: /quiz/{userId}/{quizId}
-        method: get
+          path: /quiz/{userId}/{quizId}
+          method: get
 
   loginAccount:
     handler: functions/loginAccount/index.handler
     events:
       - httpApi:
-        path: /auth/login
-        method: get
+          path: /auth/login
+          method: get
