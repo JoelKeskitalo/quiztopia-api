@@ -1,12 +1,11 @@
-const { dynamoDb } = require('../../database')
+const { dynamoDb } = require('../../database/db')
 const { v4: uuidv4 } = require('uuid')
 
 module.exports.handler = async (event) => {
     try {
+        const { userName, email, password } = JSON.parse(event.body)
 
-        const { userId, userName, email, password, createdAt} = JSON.parse(event.body)
-
-        if(!userId || !userName || !email || !password || !createdAt) {
+        if (!userName || !email || !password) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({
@@ -16,26 +15,30 @@ module.exports.handler = async (event) => {
         }
 
 
-        const userParams = {
+        
+        const scanParams = {
             TableName: 'Quiztopia-Users',
-            Key: { userId }
+            FilterExpression: 'email = :email',
+            ExpressionAttributeValues: {
+                ':email': email
+            }
         }
 
-        const result = await dynamoDb.get(userParams)
-        const user = result.Item
+        const scanResult = await dynamoDb.scan(scanParams)
+        const existingUser = scanResult.Items[0]
 
-        if(user.userId === userId) {
+        if (existingUser) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({
-                    message: 'User id already exists'
+                    message: 'User email already exists'
                 })
             }
         }
 
 
-        userId = uuidv4()
-        createdAt = new Date().toString()
+        const userId = uuidv4().toString()
+        const createdAt = new Date().toISOString()
 
         const createUserParams = {
             TableName: 'Quiztopia-Users',
@@ -43,7 +46,7 @@ module.exports.handler = async (event) => {
                 userId,
                 userName,
                 email,
-                password,
+                password, // OBS: Hasha lösenordet!!!
                 createdAt
             }
         }
@@ -54,12 +57,11 @@ module.exports.handler = async (event) => {
             statusCode: 200,
             body: JSON.stringify({
                 message: 'User created successfully',
-                user: userId
+                userId
             })
         }
-        
 
-    } catch(error) {
+    } catch (error) {
         return {
             statusCode: 500,
             body: JSON.stringify({

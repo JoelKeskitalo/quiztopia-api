@@ -27,47 +27,47 @@ functions:
     handler: functions/addQuestionToQuiz/index.handler
     events:
       - httpApi:
-          path: /
+          path: /quiz/question
           method: post
 
   createAccount:
     handler: functions/createAccount/index.handler
     events:
       - httpApi:
-          path: /
+          path: /auth/signup
           method: post
 
   createQuiz:
     handler: functions/createQuiz/index.handler
     events:
       - httpApi:
-          path: /
+          path: /quiz
           method: post
 
   deleteQuiz:
     handler: functions/deleteQuiz/index.handler
     events:
       - httpApi:
-          path: /
+          path: /quiz/{quizId}
           method: delete
 
   getAllQuiz:
     handler: functions/getAllQuiz/index.handler
     events:
       - httpApi:
-        path: /
+        path: /quiz
         method: get
 
   getQuizById:
     handler: functions/getQuizById/index.handler
     events:
       - httpApi:
-        path: /
+        path: /quiz/{userId}/{quizId}
         method: get
 
   loginAccount:
     handler: functions/loginAccount/index.handler
     events:
       - httpApi:
-        path: /
+        path: /auth/login
         method: get
