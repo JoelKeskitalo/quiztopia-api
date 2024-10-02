@@ -21,7 +21,7 @@ provider:
         - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Quiz
         - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Users
         - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Leaderboard
-
+        - arn:aws:dynamodb:eu-north-1:*:table/Quiztopia-Users/index/email-index
 functions:
   addQuestionToQuiz:
     handler: functions/addQuestionToQuiz/index.handler
