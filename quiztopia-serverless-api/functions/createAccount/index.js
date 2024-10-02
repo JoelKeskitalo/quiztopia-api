@@ -39,6 +39,7 @@ module.exports.handler = async (event) => {
 
         const userId = uuidv4().toString()
         const createdAt = new Date().toISOString()
+        const online = false
 
         const createUserParams = {
             TableName: 'Quiztopia-Users',
@@ -47,7 +48,8 @@ module.exports.handler = async (event) => {
                 userName,
                 email,
                 password, // OBS: Hasha lösenordet!!!
-                createdAt
+                createdAt,
+                online
             }
         }
 
