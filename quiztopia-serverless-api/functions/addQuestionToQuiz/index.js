@@ -3,9 +3,9 @@ const { dynamoDb } = require('../../database/db')
 module.exports.handler = async (event) => {
     try {
 
-        const { quizId, newQuestion } = JSON.parse(event.body)
+        const { quizId, userId, newQuestion } = JSON.parse(event.body)
 
-        if(!!quizId || newQuestion ) {
+        if(!quizId || !userId, !newQuestion ) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({
@@ -18,7 +18,8 @@ module.exports.handler = async (event) => {
         const getParams = {
             TableName: 'Quiztopia-Quiz',
             Key: { 
-                quizId: quizId
+                quizId: quizId,
+                userId: userId
             }
         }
 
@@ -40,7 +41,8 @@ module.exports.handler = async (event) => {
         const updateParams = {
             TableName: 'Quiztopia-Quiz',
             Key: {
-                quizId: quizId
+                quizId: quizId,
+                userId: userId
             },
             UpdateExpression: 'SET questions = :updatedQuestions',
             ExpressionAttributeValues: {
