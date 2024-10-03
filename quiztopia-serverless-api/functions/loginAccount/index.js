@@ -2,7 +2,7 @@ const { dynamoDb } = require('../../database/db')
 
 module.exports.handler = async (event) => {
     try {
-        const { email, password } = JSON.parse(event.body);
+        const { email, password } = JSON.parse(event.body)
 
         if (!email || !password) {
             return {
@@ -16,15 +16,15 @@ module.exports.handler = async (event) => {
 
         const userParams = {
             TableName: 'Quiztopia-Users',
-            IndexName: 'email-index',  
+            IndexName: 'email-index', 
             KeyConditionExpression: 'email = :email',
             ExpressionAttributeValues: {
                 ':email': email
             }
         };
 
-        const result = await dynamoDb.query(userParams);
-        const user = result.Items[0];  
+        const result = await dynamoDb.query(userParams)
+        const user = result.Items[0]
 
         if (!user) {
             return {
@@ -34,6 +34,7 @@ module.exports.handler = async (event) => {
                 })
             }
         }
+
 
         if (user.password !== password) {
             return {
@@ -45,13 +46,32 @@ module.exports.handler = async (event) => {
         }
 
 
+        const updateParams = {
+            TableName: 'Quiztopia-Users',
+            Key: {
+                userId: user.userId
+            },
+            UpdateExpression: 'SET #onlineStatus = :onlineStatus',
+            ExpressionAttributeNames: {
+                '#onlineStatus': 'online'  // Alias för det reserverade ordet "online"
+            },
+            ExpressionAttributeValues: {
+                ':onlineStatus': true  
+            },
+            ReturnValues: 'ALL_NEW'
+        }
+        
+        const updatedUser = await dynamoDb.update(updateParams)
+
+
         return {
             statusCode: 200,
             body: JSON.stringify({
                 message: 'Login successful',
-                userId: user.userId  
+                user: updatedUser.Attributes
             })
-        };
+        }
+
 
     } catch (error) {
         return {
