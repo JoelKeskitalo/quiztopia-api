@@ -1,4 +1,8 @@
+require('dotenv').config();
+const secretKey = process.env.JWT_SECRET;
 const { dynamoDb } = require('../../database/db')
+
+
 
 module.exports.handler = async (event) => {
     try {

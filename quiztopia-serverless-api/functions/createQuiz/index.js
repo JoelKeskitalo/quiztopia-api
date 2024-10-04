@@ -1,3 +1,5 @@
+require('dotenv').config();
+const secretKey = process.env.JWT_SECRET;
 const { dynamoDb } = require('../../database/db')
 const { v4: uuidv4 } = require('uuid')
 
