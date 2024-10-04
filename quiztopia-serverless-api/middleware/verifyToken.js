@@ -2,33 +2,26 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const secretKey = process.env.JWT_SECRET
 
-module.exports.verifyToken = async (event) => {
+const verifyToken = {
+  before: async (handler) => {
 
-    const token = event.header.Authorization || event.header.authorization
+    const token = handler.event.headers.Authorization || handler.event.headers.authorization
 
-    if(!token) {
-        return {
-            statusCode: 403,
-            body: JSON.stringify({
-                message: 'Access denied. No token provided'
-            })
-        }
+    if (!token) {
+      throw new Error('Access denied. No token provided.')
     }
 
     try {
+      const cleanToken = token.replace('Bearer ', '')
 
-        const cleanToken = token.replace('Bearer ', '')
-        const decoded = jwt.verify(cleanToken, secretKey)
+      const decoded = jwt.verify(cleanToken, secretKey)
 
-        return {
-            statusCode: 200,
-            decoded: decoded
-        }
+      handler.event.user = decoded
 
-    } catch(error) {
-        return {
-            statusCode: 500,
-            error: error.message
-        }
+    } catch (error) {
+      throw new Error('Invalid token.')
     }
+  }
 }
+
+module.exports = verifyToken
