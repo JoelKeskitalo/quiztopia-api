@@ -39,8 +39,9 @@ module.exports.handler = async (event) => {
             }
         }
 
+        const validPassword = await bcrypt.compare(password, user.password)
 
-        if (user.password !== password) {
+        if (!validPassword) {
             return {
                 statusCode: 401,
                 body: JSON.stringify({

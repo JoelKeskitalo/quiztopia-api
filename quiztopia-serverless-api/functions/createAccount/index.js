@@ -2,6 +2,7 @@ require('dotenv').config();
 const secretKey = process.env.JWT_SECRET;
 const { dynamoDb } = require('../../database/db')
 const { v4: uuidv4 } = require('uuid')
+const bcrypt = require('bcryptjs')
 
 
 
@@ -45,13 +46,15 @@ module.exports.handler = async (event) => {
         const createdAt = new Date().toISOString()
         const online = false
 
+        const hashedPassword = await bcrypt.hash(password, 10)
+
         const createUserParams = {
             TableName: 'Quiztopia-Users',
             Item: {
                 userId,
                 userName,
                 email,
-                password, // OBS: Hasha lösenordet!!!
+                password: hashedPassword,
                 createdAt,
                 online
             }
