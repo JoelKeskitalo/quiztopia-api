@@ -1,10 +1,12 @@
-require('dotenv').config();
-const secretKey = process.env.JWT_SECRET;
+require('dotenv').config()
+const secretKey = process.env.JWT_SECRET
 const { dynamoDb } = require('../../database/db')
+const middy = require('@middy/core')
+const verifyToken = require('../../middleware/verifyToken')
 
 
 
-module.exports.handler = async (event) => {
+const addQuestionToQuiz = async (event) => {
     try {
 
         const { quizId, userId, newQuestion } = JSON.parse(event.body)
@@ -76,3 +78,5 @@ module.exports.handler = async (event) => {
         }
     }
 }
+
+module.exports.handler = middy(addQuestionToQuiz).use(verifyToken)

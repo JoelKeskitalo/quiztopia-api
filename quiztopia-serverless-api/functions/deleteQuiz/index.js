@@ -1,8 +1,10 @@
-require('dotenv').config();
-const secretKey = process.env.JWT_SECRET;
+require('dotenv').config()
+const secretKey = process.env.JWT_SECRET
 const { dynamoDb } = require('../../database/db')
+const middy = require('@middy/core')
+const verifyToken = require('../../middleware/verifyToken')
 
-module.exports.handler = async (event) => {
+const removeQuiz = async (event) => {
     try {
 
         const { userId, quizId } = event.pathParameters;
@@ -64,3 +66,5 @@ module.exports.handler = async (event) => {
         }
     }
 }
+
+module.exports.handler = middy(removeQuiz).use(verifyToken)
