@@ -1,6 +1,8 @@
-require('dotenv').config();
-const secretKey = process.env.JWT_SECRET;
+require('dotenv').config()
+const secretKey = process.env.JWT_SECRET
 const { dynamoDb } = require('../../database/db')
+
+const jwt = require('jsonwebtoken')
 
 module.exports.handler = async (event) => {
     try {
@@ -47,6 +49,15 @@ module.exports.handler = async (event) => {
             }
         }
 
+        const token = jwt.sign(
+            {
+                userId: user.userId,
+                email: user.email
+            },
+            secretKey, 
+            { expiresIn: '1h'}
+        )
+
 
         const updateParams = {
             TableName: 'Quiztopia-Users',
@@ -70,6 +81,7 @@ module.exports.handler = async (event) => {
             statusCode: 200,
             body: JSON.stringify({
                 message: 'Login successful',
+                token: token,
                 user: updatedUser.Attributes
             })
         }
